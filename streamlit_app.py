@@ -293,7 +293,7 @@ combined_chart3 = combined_chart.properties(
 
 
 #Random Forest
-read_path = os.path.join(os.path.dirname(__file__), 'data', 'forecast_rfcsv')
+read_path = os.path.join(os.path.dirname(__file__), 'data', 'forecast_rf.csv')
 if not os.path.exists(read_path):
     st.error(f"File không tồn tại: {read_path}")
 else:
