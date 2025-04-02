@@ -321,7 +321,7 @@ combined_chart4 = combined_chart.properties(
 st.markdown("<h1 style='text-align: center; color: black;'>🫦 Forecast giá dầu Brent Future</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: left; color: black;'>💃 Chọn mô hình dự báo</h2>", unsafe_allow_html=True)
 # st.write("##💃 Chọn mô hình dự báo")
-model_choice = st.selectbox("", ["Time GPT", "Prophet", "XG Boost", "Light GBM"])
+model_choice = st.selectbox("", ["Time GPT", "Prophet", "XG Boost", "Light GBM", "Random Forest"])
 
 if model_choice == "Time GPT":
     st.dataframe(fcst_df)
