@@ -16,10 +16,11 @@ with st.expander('Về ứng dụng này'):
     )
     st.markdown('**Cách sử dụng ứng dụng?**')
     st.warning(
-        'Để tương tác với ứng dụng, '
-        '1. Chọn các biến bạn quan tâm trong hộp lựa chọn thả xuống, sau đó '
-        '2. Chọn khoảng thời gian từ thanh trượt. Kết quả sẽ hiển thị biểu đồ và bảng dữ liệu tương ứng.'
-    )
+    'Để tương tác với ứng dụng: \n'
+    '1. Chọn các biến bạn quan tâm trong hộp lựa chọn thả xuống, sau đó \n'
+    '2. Chọn khoảng thời gian từ thanh trượt. \n'
+    'Kết quả sẽ hiển thị biểu đồ và bảng dữ liệu tương ứng.'
+)
 
 st.subheader('Phân tích biến động thị trường theo từng năm')
 
