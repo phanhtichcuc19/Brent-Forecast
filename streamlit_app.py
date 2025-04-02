@@ -65,9 +65,9 @@ df_filtered = df[(df['Date'] >= start_date) & (df['Date'] <= end_date)]
 st.write("### Dữ liệu được chọn", df_filtered)
 
 df_filtered['Date'] = pd.to_datetime(df_filtered['Date'])
-df_filtered = df_filtered[df_filtered['Date'].dt.weekday < 5]
+# df_filtered = df_filtered[df_filtered['Date'].dt.weekday < 5]
 
-oil_chart_data = df_filtered[["Date", "Brent_future_price", "WTI_future_price", "Basket_price"]]
+oil_chart_data = df_filtered[["Date", "Brent_future_price", "WTI_future_price", "Basket_price"]].dropna()
 oil_chart_data = oil_chart_data.melt('Date', var_name='Oil_Type', value_name='Price')
 
 custom_color_scale = alt.Scale(
@@ -101,7 +101,7 @@ st.altair_chart(oil_chart, use_container_width=True)
 # st.write("### Biểu đồ Giá khí tự nhiên & Dầu hỏa")
 # st.line_chart(chart_data_fuel)
 
-chart_data_fuel = df_filtered[["Date", "nature_gas_price", "heating_oil_price"]]
+chart_data_fuel = df_filtered[["Date", "nature_gas_price", "heating_oil_price"]].dropna()
 chart_data_fuel = chart_data_fuel.melt('Date', var_name='Fuel_Type', value_name='Price')
 
 custom_color_scale = alt.Scale(
@@ -132,7 +132,7 @@ st.altair_chart(fuel_chart, use_container_width=True)
 
 
 
-chart_data_gold = df_filtered[["Date", "Gold_future_price"]]
+chart_data_gold = df_filtered[["Date", "Gold_future_price"]].dropna()
 
 gold_chart = alt.Chart(chart_data_gold).mark_line(color="#FFB22C", size=2).encode(
     x=alt.X('Date:T', title='Ngày'),
