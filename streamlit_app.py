@@ -24,7 +24,7 @@ with st.expander('Về ứng dụng này'):
 st.subheader('Phân tích biến động thị trường theo từng năm')
 
 # Load data - Read CSV into a Pandas DataFrame
-df = pd.read_csv('data/Brent_final_raw.csv')
+df = pd.read_excel('data/Brent_final_raw.xlsx')
 df = df.iloc[8:]
 df['Date'] = pd.to_datetime(df['Date']).dt.date
 
@@ -63,6 +63,9 @@ start_date, end_date = date_range[0], date_range[1]
 df_filtered = df[(df['Date'] >= start_date) & (df['Date'] <= end_date)]
 
 st.write("### Dữ liệu được chọn", df_filtered)
+
+df_filtered['Date'] = pd.to_datetime(df_filtered['Date'])
+df_filtered = df_filtered[df_filtered['Date'].dt.weekday < 5]
 
 oil_chart_data = df_filtered[["Date", "Brent_future_price", "WTI_future_price", "Basket_price"]]
 oil_chart_data = oil_chart_data.melt('Date', var_name='Oil_Type', value_name='Price')
@@ -179,6 +182,8 @@ else:
     # st.dataframe(fcst_df)
 
 df_hist_2025 = df[df['Date'] >= pd.to_datetime("2023-01-01").date()]
+df_hist_2025['Date'] = pd.to_datetime(df_hist_2025['Date'])
+df_hist_2025 = df_hist_2025[df_hist_2025['Date'].dt.weekday < 5]
 
 # Biểu đồ lịch sử: Sử dụng cột "Brent_future_price" với màu steelblue, đường liền
 hist_chart = alt.Chart(df_hist_2025).mark_line(color="steelblue", size=2).encode(

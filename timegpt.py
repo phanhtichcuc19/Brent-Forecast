@@ -4,7 +4,7 @@ from datetime import datetime
 from utilsforecast.preprocessing import fill_gaps
 import os
 
-df = pd.read_csv('data/Brent_final_raw.csv')
+df = pd.read_excel('data/Brent_final_raw.xlsx')
 df = df.iloc[8:]
 df['Date'] = pd.to_datetime(df['Date'])
 
@@ -16,20 +16,15 @@ df_brent = pd.DataFrame({
 # Điền đầy dữ liệu bị thiếu
 df_brent_fill = df_brent.copy()
 df_brent_fill['unique_id'] = 'series_1'
-df_brent_fill = fill_gaps(df_brent_fill, freq='D', id_col='unique_id', time_col='timestamp')
+df_brent_fill = fill_gaps(df_brent_fill, freq='B', id_col='unique_id', time_col='timestamp')
+
 df_brent_fill = df_brent_fill.drop(columns=['unique_id'])
 df_brent_fill['value'] = df_brent_fill['value'].interpolate(method='linear', limit_direction='both')
 
 # Sử dụng TimeGPT để dự báo 30 ngày
 nixtla_client = NixtlaClient(api_key='nixak-wFK5lJ8uzPREbB5AtGxWi7NM4bfxbulWEOHjJyO3VoG2ltBSCosFY1NnOycutjiF0kIpm7Z1ROaF2aOz')
-fcst_df = nixtla_client.forecast(
-    df_brent_fill, 
-    h=30, 
-    time_col='timestamp', 
-    target_col='value',
-    level=[80, 90], 
-    model='timegpt-1-long-horizon'
-)
+fcst_df = nixtla_client.forecast(df_brent_fill, h=30, time_col='timestamp', target_col='value',
+                                 level=[80, 90], model = 'timegpt-1-long-horizon')
 
 # Lưu kết quả dự báo vào file CSV
 # fcst_df.to_csv('F:\Brent forecast\brent\data\forecast_brent.csv', index=False)
