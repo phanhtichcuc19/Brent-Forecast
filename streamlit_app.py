@@ -183,7 +183,8 @@ else:
 
 df_hist_2025 = df[df['Date'] >= pd.to_datetime("2023-01-01").date()]
 df_hist_2025['Date'] = pd.to_datetime(df_hist_2025['Date'])
-df_hist_2025 = df_hist_2025[df_hist_2025['Date'].dt.weekday < 5]
+df_hist_2025 = df_hist_2025[["Date", "Brent_future_price"]].dropna()
+# df_hist_2025 = df_hist_2025[df_hist_2025['Date'].dt.weekday < 5].dropna()
 
 # Biểu đồ lịch sử: Sử dụng cột "Brent_future_price" với màu steelblue, đường liền
 hist_chart = alt.Chart(df_hist_2025).mark_line(color="steelblue", size=2).encode(
@@ -240,13 +241,60 @@ combined_chart1 = combined_chart1.properties(
     # title="Biểu đồ Giá dầu Brent Future (Lịch sử và Dự báo)"
 ).interactive()
 
-# st.write("### Forecast giá dầu Brent Future")
-# st.altair_chart(combined_chart1, use_container_width=True)
+#XG boost
+read_path = os.path.join(os.path.dirname(__file__), 'data', 'forecast_xg.csv')
+if not os.path.exists(read_path):
+    st.error(f"File không tồn tại: {read_path}")
+else:
+    xg_df = pd.read_csv(read_path)
+    xg_df['Date'] = pd.to_datetime(xg_df['Date'])
+    xg_df = xg_df[xg_df['Date'].dt.weekday < 5]
+
+xg_df.rename(columns={'Predicted_Brent_future_price': 'XG Boost'}, inplace=True)
+forecast_xg_chart = alt.Chart(xg_df).mark_line(color="red", size=2).encode(
+    x=alt.X('Date:T', title='Ngày'),
+    y=alt.Y('XG Boost:Q', title='Giá dầu Brent Future'),
+    tooltip=['Date:T', 'XG Boost:Q']
+).properties(
+    height=400
+)
+
+# Kết hợp hai biểu đồ lại với nhau
+combined_chart2 = hist_chart + forecast_xg_chart
+combined_chart2 = combined_chart.properties(
+    # title="Biểu đồ Giá dầu Brent Future (Lịch sử và Dự báo)"
+).interactive()
+
+
+#Light GBM
+read_path = os.path.join(os.path.dirname(__file__), 'data', 'forecast_lightgbm.csv')
+if not os.path.exists(read_path):
+    st.error(f"File không tồn tại: {read_path}")
+else:
+    lightgbm_df = pd.read_csv(read_path)
+    lightgbm_df['Date'] = pd.to_datetime(lightgbm_df['Date'])
+    lightgbm_df = lightgbm_df[lightgbm_df['Date'].dt.weekday < 5]
+
+lightgbm_df.rename(columns={'Predicted_Brent_future_price': 'Light GBM'}, inplace=True)
+forecast_lightgbm_chart = alt.Chart(lightgbm_df).mark_line(color="red", size=2).encode(
+    x=alt.X('Date:T', title='Ngày'),
+    y=alt.Y('Light GBM:Q', title='Giá dầu Brent Future'),
+    tooltip=['Date:T', 'Light GBM:Q']
+).properties(
+    height=400
+)
+
+# Kết hợp hai biểu đồ lại với nhau
+combined_chart3 = hist_chart + forecast_lightgbm_chart
+combined_chart3 = combined_chart.properties(
+    # title="Biểu đồ Giá dầu Brent Future (Lịch sử và Dự báo)"
+).interactive()
+
 
 st.markdown("<h1 style='text-align: center; color: black;'>🫦 Forecast giá dầu Brent Future</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: left; color: black;'>💃 Chọn mô hình dự báo</h2>", unsafe_allow_html=True)
 # st.write("##💃 Chọn mô hình dự báo")
-model_choice = st.selectbox("", ["Time GPT", "Prophet"])
+model_choice = st.selectbox("", ["Time GPT", "Prophet", "XG Boost", "Light GBM"])
 
 if model_choice == "Time GPT":
     st.dataframe(fcst_df)
@@ -256,3 +304,11 @@ elif model_choice == "Prophet":
     st.dataframe(prophet_df)
     st.write("### Forecast giá dầu Brent Future bằng Prophet")
     st.altair_chart(combined_chart1, use_container_width=True)
+elif model_choice == "XG Boost":
+    st.dataframe(xg_df)
+    st.write("### Forecast giá dầu Brent Future bằng XG Boost")
+    st.altair_chart(combined_chart2, use_container_width=True)
+elif model_choice == "Light GBM":
+    st.dataframe(lightgbm_df)
+    st.write("### Forecast giá dầu Brent Future bằng Light GBM")
+    st.altair_chart(combined_chart3, use_container_width=True)
