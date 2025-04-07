@@ -316,12 +316,34 @@ combined_chart4 = combined_chart.properties(
     # title="Biểu đồ Giá dầu Brent Future (Lịch sử và Dự báo)"
 ).interactive()
 
+# ARIMA
+read_path = os.path.join(os.path.dirname(__file__), 'data', 'forecast_arima.csv')
+if not os.path.exists(read_path):
+    st.error(f"File không tồn tại: {read_path}")
+else:
+    arima_df = pd.read_csv(read_path)
+    arima_df['Date'] = pd.to_datetime(arima_df['Date'])
+    arima_df = arima_df[arima_df['Date'].dt.weekday < 5]
+    # st.dataframe(prophet_df)
 
+forecast_prophet_chart = alt.Chart(arima_df).mark_line(color="red", size=2).encode(
+    x=alt.X('Date:T', title='Ngày'),
+    y=alt.Y('ARIMA:Q', title='Giá dầu Brent Future'),
+    tooltip=['Date:T', 'ARIMA:Q']
+).properties(
+    height=400
+)
+
+# Kết hợp hai biểu đồ lại với nhau
+combined_chart5 = hist_chart + forecast_prophet_chart
+combined_chart5 = combined_chart5.properties(
+    # title="Biểu đồ Giá dầu Brent Future (Lịch sử và Dự báo)"
+).interactive()
 
 st.markdown("<h1 style='text-align: center; color: black;'>🫦 Forecast giá dầu Brent Future</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='text-align: left; color: black;'>💃 Chọn mô hình dự báo</h2>", unsafe_allow_html=True)
 # st.write("##💃 Chọn mô hình dự báo")
-model_choice = st.selectbox("", ["Time GPT", "Prophet", "XG Boost", "Light GBM", "Random Forest"])
+model_choice = st.selectbox("", ["Time GPT", "Prophet", "XG Boost", "Light GBM", "Random Forest", "ARIMA"])
 
 if model_choice == "Time GPT":
     st.dataframe(fcst_df)
@@ -343,3 +365,7 @@ elif model_choice == "Random Forest":
     st.dataframe(rf_df)
     st.write("### Forecast giá dầu Brent Future bằng Random Forest")
     st.altair_chart(combined_chart4, use_container_width=True)
+elif model_choice == "ARIMA":
+    st.dataframe(arima_df)
+    st.write("### Forecast giá dầu Brent Future bằng ARIMA")
+    st.altair_chart(combined_chart5, use_container_width=True)
