@@ -324,18 +324,18 @@ else:
     arima_df = pd.read_csv(read_path)
     arima_df['Date'] = pd.to_datetime(arima_df['Date'])
     arima_df = arima_df[arima_df['Date'].dt.weekday < 5]
-    # st.dataframe(prophet_df)
 
-forecast_prophet_chart = alt.Chart(arima_df).mark_line(color="red", size=2).encode(
+rf_df.rename(columns={'Predicted_Brent_future_price': 'Arima'}, inplace=True)
+forecast_arima_chart = alt.Chart(arima_df).mark_line(color="red", size=2).encode(
     x=alt.X('Date:T', title='Ngày'),
-    y=alt.Y('ARIMA:Q', title='Giá dầu Brent Future'),
-    tooltip=['Date:T', 'ARIMA:Q']
+    y=alt.Y('Arima:Q', title='Giá dầu Brent Future'),
+    tooltip=['Date:T', 'Arima:Q']
 ).properties(
     height=400
 )
 
 # Kết hợp hai biểu đồ lại với nhau
-combined_chart5 = hist_chart + forecast_prophet_chart
+combined_chart5 = hist_chart + forecast_arima_chart
 combined_chart5 = combined_chart5.properties(
     # title="Biểu đồ Giá dầu Brent Future (Lịch sử và Dự báo)"
 ).interactive()
