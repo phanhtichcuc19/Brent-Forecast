@@ -262,7 +262,7 @@ forecast_xg_chart = alt.Chart(xg_df).mark_line(color="red", size=2).encode(
 
 # Kết hợp hai biểu đồ lại với nhau
 combined_chart2 = hist_chart + forecast_xg_chart
-combined_chart2 = combined_chart.properties(
+combined_chart2 = combined_chart2.properties(
     # title="Biểu đồ Giá dầu Brent Future (Lịch sử và Dự báo)"
 ).interactive()
 
@@ -287,7 +287,7 @@ forecast_lightgbm_chart = alt.Chart(lightgbm_df).mark_line(color="red", size=2).
 
 # Kết hợp hai biểu đồ lại với nhau
 combined_chart3 = hist_chart + forecast_lightgbm_chart
-combined_chart3 = combined_chart.properties(
+combined_chart3 = combined_chart3.properties(
     # title="Biểu đồ Giá dầu Brent Future (Lịch sử và Dự báo)"
 ).interactive()
 
@@ -312,7 +312,7 @@ forecast_rf_chart = alt.Chart(rf_df).mark_line(color="red", size=2).encode(
 
 # Kết hợp hai biểu đồ lại với nhau
 combined_chart4 = hist_chart + forecast_rf_chart
-combined_chart4 = combined_chart.properties(
+combined_chart4 = combined_chart4.properties(
     # title="Biểu đồ Giá dầu Brent Future (Lịch sử và Dự báo)"
 ).interactive()
 
